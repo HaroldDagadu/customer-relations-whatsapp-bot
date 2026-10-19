@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Admin Dashboard</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for Trend and Semantic charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css?v=2">
+</head>
+<body>
+    <div id="top-progress-bar"></div>
+    
+    <!-- Global Screen Loader -->
+    <div id="global-loader" class="glass-modal-container active">
+        <div class="glass-card login-card" style="text-align:center; padding: 40px 20px;">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size: 40px; color: var(--primary); margin-bottom: 20px;"></i>
+            <h3>WhatsApp CRM</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 5px;">Initializing workspace...</p>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-container" class="glass-modal-container">
+        <div class="glass-card login-card">
+            <div class="logo">
+                <i class="fa-solid fa-comments" style="font-size: 36px; color: var(--primary);"></i>
+                <h2>WhatsApp CRM</h2>
+                <p>Admin Portal Access</p>
+            </div>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username"><i class="fa-solid fa-user"></i> Username</label>
+                    <input type="text" id="username" placeholder="Enter username" required autocomplete="username">
+                </div>
+                <div class="input-group">
+                    <label for="password"><i class="fa-solid fa-lock"></i> Password</label>
+                    <input type="password" id="password" placeholder="Enter password" required autocomplete="current-password">
+                </div>
+                <div id="login-error" class="error-msg hide"></div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <span>Login</span> <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reset Password Screen -->
+    <div id="reset-password-container" class="glass-modal-container hide">
+        <div class="glass-card login-card">
+            <div class="logo">
+                <i class="fa-solid fa-comments" style="font-size: 36px; color: var(--primary);"></i>
+                <h2>Set New Password</h2>
+                <p>Welcome! Please set a new password to continue.</p>
+            </div>
+            <form id="reset-password-form">
+                <div class="input-group">
+                    <label for="new-password"><i class="fa-solid fa-lock"></i> New Password</label>
+                    <input type="password" id="new-password" placeholder="Enter new password" required minlength="6">
+                </div>
+                <div class="input-group">
+                    <label for="confirm-password"><i class="fa-solid fa-lock"></i> Confirm Password</label>
+                    <input type="password" id="confirm-password" placeholder="Confirm new password" required minlength="6">
+                </div>
+                <div id="reset-error" class="error-msg hide"></div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <span>Update Password & Login</span> <i class="fa-solid fa-check"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Container -->
+    <div id="app-container" class="hide">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <i class="fa-solid fa-comments brand-logo" style="font-size: 18px; color: var(--primary); line-height: 28px; text-align: center;"></i>
+                    <div>
+                        <h3>WhatsApp CRM</h3>
+                        <span class="badge" id="admin-role-badge">Super Admin</span>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="#overview" class="menu-item active" data-tab="overview">
+                    <i class="fa-solid fa-chart-line" style="margin-right:8px; width:16px;"></i> <span>Overview</span>
+                </a>
+                <a href="#chats" class="menu-item" data-tab="chats">
+                    <i class="fa-solid fa-comments" style="margin-right:8px; width:16px;"></i> <span>Live Chats</span>
+                </a>
+                <a href="#chat-analysis" class="menu-item" data-tab="chat-analysis">
+                    <i class="fa-solid fa-chart-pie" style="margin-right:8px; width:16px;"></i> <span>Chat Analysis</span>
+                </a>
+                <a href="#broadcast" class="menu-item" data-tab="broadcast">
+                    <i class="fa-solid fa-bullhorn" style="margin-right:8px; width:16px;"></i> <span>Broadcast</span>
+                </a>
+                <a href="#knowledge" class="menu-item" data-tab="knowledge">
+                    <i class="fa-solid fa-book-open" style="margin-right:8px; width:16px;"></i> <span>Knowledge Base</span>
+                </a>
+                <a href="#packages" class="menu-item" data-tab="packages">
+                    <i class="fa-solid fa-box" style="margin-right:8px; width:16px;"></i> <span>Packages</span>
+                </a>
+                <a href="#fees" class="menu-item" data-tab="fees">
+                    <i class="fa-solid fa-hand-holding-dollar" style="margin-right:8px; width:16px;"></i> <span>Add-On Fees</span>
+                </a>
+                <a href="#branches" class="menu-item" data-tab="branches">
+                    <i class="fa-solid fa-building" style="margin-right:8px; width:16px;"></i> <span>Branches</span>
+                </a>
+                <a href="#clients" class="menu-item" data-tab="clients">
+                    <i class="fa-solid fa-users" style="margin-right:8px; width:16px;"></i> <span>Clients</span>
+                </a>
+                <a href="#registrations" class="menu-item" data-tab="registrations">
+                    <i class="fa-solid fa-address-card" style="margin-right:8px; width:16px;"></i> <span>Registrations</span>
+                </a>
+                <a href="#tickets" class="menu-item" data-tab="tickets">
+                    <i class="fa-solid fa-ticket" style="margin-right:8px; width:16px;"></i> <span>Support Tickets</span>
+                </a>
+
+                <a href="#resources" class="menu-item hide" data-tab="resources" id="menu-resources">
+                    <i class="fa-solid fa-circle-info" style="margin-right:8px; width:16px;"></i> <span>School Info</span>
+                </a>
+                <a href="#admins" class="menu-item" data-tab="admins" id="menu-admins">
+                    <i class="fa-solid fa-user-gear" style="margin-right:8px; width:16px;"></i> <span>Manage Admins</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar" id="admin-avatar-initials"><i class="fa-solid fa-user-shield"></i></div>
+                    <div class="user-info">
+                        <h4 id="admin-username">Admin</h4>
+                        <span id="admin-location-lbl">Main Branch</span>
+                    </div>
+                </div>
+                <button id="btn-logout" class="btn-icon" title="Logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-title">
+                    <h1 id="page-title">Overview</h1>
+                </div>
+                <div class="header-actions">
+                    <!-- Location Selector for Super Admins -->
+                    <div class="location-filter-wrapper" id="location-filter-wrapper">
+                        <label for="location-select"><i class="fa-solid fa-location-dot"></i> Branch:</label>
+                        <select id="location-select">
+                            <option value="">All Branches</option>
+                        </select>
+                    </div>
+                    <div class="system-time">
+                        <span id="clock">00:00:00</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content Panels -->
+            <div class="panel-container">
+                
+                <!-- Panel 1: Overview -->
+                <section id="panel-overview" class="tab-panel active">
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="glass-card stat-card">
+                            <div class="stat-info">
+                                <h3>Total Users</h3>
+                                <p class="stat-value" id="metric-users">0</p>
+                                <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 4px;" id="metric-users-split">Whole Bot: 0</span>
+                            </div>
+                        </div>
+                        <div class="glass-card stat-card">
+                            <div class="stat-info">
+                                <h3>Registrations</h3>
+                                <p class="stat-value" id="metric-registrations">0</p>
+                            </div>
+                        </div>
+                        <div class="glass-card stat-card">
+                            <div class="stat-info">
+                                <h3>Total Revenue</h3>
+                                <p class="stat-value" id="metric-revenue">GHS 0.00</p>
+                            </div>
+                        </div>
+                        <div class="glass-card stat-card">
+                            <div class="stat-info">
+                                <h3>Open Tickets</h3>
+                                <p class="stat-value" id="metric-tickets">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Operational Trends Line Chart -->
+                    <div class="layout-split">
+                        <div class="glass-card flex-3">
+                            <div class="card-header">
+                                <h3>Operational Trends</h3>
+                            </div>
+                            <div class="card-body" style="height: 320px;">
+                                <canvas id="overview-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="glass-card flex-2">
+                            <div class="card-header">
+                                <h3>AI Executive Insights</h3>
+                                <button id="btn-generate-insights" class="btn btn-primary btn-sm">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Compile
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="insights-placeholder" class="placeholder-text" style="padding: 10px 0;">
+                                    <p>Click "Compile" to summarize customer intent and conversion metrics from the last 200 user chats.</p>
+                                </div>
+                                <div id="insights-content" class="insights-output hide" style="max-height: 250px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Message Analytics Filter -->
+                    <div class="glass-card" style="margin-bottom: 20px;">
+                        <div class="card-header">
+                            <h3>Message Analytics</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="msg-analytics-form" style="display:flex; gap:15px; align-items:flex-end; margin-bottom: 20px; flex-wrap:wrap;">
+                                <div class="input-group" style="flex:1; min-width:150px; margin-bottom:0;">
+                                    <label>Start Date</label>
+                                    <input type="date" id="msg-filter-start" required>
+                                </div>
+                                <div class="input-group" style="flex:1; min-width:150px; margin-bottom:0;">
+                                    <label>End Date</label>
+                                    <input type="date" id="msg-filter-end" required>
+                                </div>
+                                <div class="input-group" style="flex:1; min-width:150px; margin-bottom:0;">
+                                    <label>Direction</label>
+                                    <select id="msg-filter-dir">
+                                        <option value="both">Both (Sent & Received)</option>
+                                        <option value="sent">Sent (Bot/Admin)</option>
+                                        <option value="received">Received (User)</option>
+                                    </select>
+                                </div>
+                                <button type="submit" id="btn-msg-filter" class="btn btn-primary" style="height:40px;"><i class="fa-solid fa-filter"></i> Apply Filter</button>
+                            </form>
+                            
+                            <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 20px;">
+                                <div class="glass-card stat-card" style="padding:15px;">
+                                    <div class="stat-info">
+                                        <h3 style="font-size: 13px; color:var(--text-muted);">Filtered Messages</h3>
+                                        <p class="stat-value" id="msg-filter-total">0</p>
+                                    </div>
+                                </div>
+                                <div class="glass-card stat-card" style="padding:15px;">
+                                    <div class="stat-info">
+                                        <h3 style="font-size: 13px; color:var(--text-muted);">Unique Users Texted</h3>
+                                        <p class="stat-value" id="msg-filter-users">0</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="height: 280px; width:100%;">
+                                <canvas id="msg-analytics-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Registration Analytics Filter -->
+                    <div class="glass-card" style="margin-bottom: 20px;">
+                        <div class="card-header">
+                            <h3>Registration Analytics</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="reg-analytics-form" style="display:flex; gap:15px; align-items:flex-end; margin-bottom: 20px; flex-wrap:wrap;">
+                                <div class="input-group" style="flex:1; min-width:150px; margin-bottom:0;">
+                                    <label>Start Date</label>
+                                    <input type="date" id="reg-filter-start" required>
+                                </div>
+                                <div class="input-group" style="flex:1; min-width:150px; margin-bottom:0;">
+                                    <label>End Date</label>
+                                    <input type="date" id="reg-filter-end" required>
+                                </div>
+                                <div class="input-group" style="flex:1; min-width:150px; margin-bottom:0;">
+                                    <label>Status</label>
+                                    <select id="reg-filter-status">
+                                        <option value="all">All Registrations</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="approved">Approved</option>
+                                        <option value="rejected">Rejected</option>
+                                    </select>
+                                </div>
+                                <button type="submit" id="btn-reg-filter" class="btn btn-primary" style="height:40px;"><i class="fa-solid fa-filter"></i> Apply Filter</button>
+                            </form>
+                            
+                            <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 20px;">
+                                <div class="glass-card stat-card" style="padding:15px;">
+                                    <div class="stat-info">
+                                        <h3 style="font-size: 13px; color:var(--text-muted);">Filtered Registrations</h3>
+                                        <p class="stat-value" id="reg-filter-total">0</p>
+                                    </div>
+                                </div>
+                                <div class="glass-card stat-card" style="padding:15px;">
+                                    <div class="stat-info">
+                                        <h3 style="font-size: 13px; color:var(--text-muted);">Pending in Range</h3>
+                                        <p class="stat-value" id="reg-filter-pending">0</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="height: 280px; width:100%;">
+                                <canvas id="reg-analytics-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Registrations -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3>Recent Registrations</h3>
+                        </div>
+                        <div class="table-container max-height-300">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Program</th>
+                                        <th>Branch</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbl-recent-registrations">
+                                    <tr><td colspan="4" class="placeholder-text">Loading registrations...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 2: Live Chats -->
+                <section id="panel-chats" class="tab-panel">
+                    <div class="chat-workspace">
+                        <!-- Left Panel: Chat List -->
+                        <div class="chat-list-sidebar glass-card">
+                            <div class="search-bar">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="chat-search" placeholder="Search chats by name/phone...">
+                            </div>
+                            <div class="chat-threads-container" id="chat-threads">
+                                <!-- Dynamic chat threads -->
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Active Chat Window -->
+                        <div class="chat-window glass-card">
+                            <!-- Workspace Active State -->
+                            <div id="chat-window-active" class="hide">
+                                <div class="chat-window-header">
+                                    <div class="client-identity">
+                                        <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                                        <div>
+                                            <h3 id="active-chat-name">User Name</h3>
+                                            <span id="active-chat-phone">Phone number</span>
+                                        </div>
+                                    </div>
+                                    <div class="chat-actions">
+                                        <button id="btn-toggle-human" class="btn btn-secondary btn-sm" title="Toggle AI Agent Auto-Replies">
+                                            <i class="fa-solid fa-robot"></i> <span id="toggle-human-text">AI Agent Active</span>
+                                        </button>
+                                        <button id="btn-analyze-chat" class="btn btn-secondary btn-sm" title="Analyze Chat History via AI">
+                                            <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Analyze Chat</span>
+                                        </button>
+                                        <button id="btn-reset-session" class="btn btn-danger btn-sm" title="Clear AI Session context">
+                                            <i class="fa-solid fa-rotate-left"></i> <span>Reset AI</span>
+                                        </button>
+                                        <button id="btn-export-chat" class="btn btn-secondary btn-sm" title="Export conversation logs">
+                                            <i class="fa-solid fa-download"></i> <span>Export</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Message Stream -->
+                                <div class="chat-message-stream" id="message-stream">
+                                    <!-- Messages load dynamically -->
+                                </div>
+
+                                <!-- Input Box -->
+                                <div class="chat-input-bar">
+                                    <input type="text" id="chat-input" placeholder="Type a message to send via WhatsApp...">
+                                    <button id="btn-send-message" class="btn btn-primary">
+                                        <i class="fa-solid fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Workspace Empty State -->
+                            <div id="chat-window-empty" class="chat-empty-state">
+                                <i class="fa-solid fa-message-captions"></i>
+                                <i class="fa-solid fa-comments" style="font-size: 50px; opacity: 0.15; margin-bottom: 10px;"></i>
+                                <h3>No Conversation Selected</h3>
+                                <p>Select a chat from the sidebar to view metrics, interact in real-time, or toggle the AI assistant.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 3: Broadcast -->
+                <section id="panel-broadcast" class="tab-panel">
+                    <div class="layout-split">
+                        <!-- Compose Broadcast -->
+                        <div class="glass-card flex-2">
+                            <div class="card-header">
+                                <h3>Send Broadcast Message</h3>
+                            </div>
+                            <form id="broadcast-form" class="padding-15">
+                                <div class="input-group">
+                                    <label for="broadcast-target">Target Audience</label>
+                                    <select id="broadcast-target">
+                                        <option value="all">All Users</option>
+                                        <option value="branch">Users by Branch Location</option>
+                                        <option value="package">Users by Package</option>
+                                        <option value="package_branch">Users by Package at a Branch</option>
+                                    </select>
+                                </div>
+                                <div class="input-group hide" id="broadcast-branch-group">
+                                    <label>Filter by Branches</label>
+                                    <div class="checkbox-grid" id="broadcast-branches-list">
+                                        <!-- Checkboxes will be populated dynamically -->
+                                    </div>
+                                </div>
+                                <div class="input-group hide" id="broadcast-package-group">
+                                    <label>Filter by Packages</label>
+                                    <div class="checkbox-grid" id="broadcast-packages-list">
+                                        <!-- Checkboxes will be populated dynamically -->
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label for="broadcast-message">Message Content</label>
+                                    <textarea id="broadcast-message" rows="8" placeholder="Write your broadcast notification here..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-share-from-square"></i> Send Now</button>
+                            </form>
+                        </div>
+
+                        <!-- Broadcast Logs -->
+                        <div class="glass-card flex-3">
+                            <div class="card-header">
+                                <h3>Broadcast Delivery History</h3>
+                            </div>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Message Snippet</th>
+                                            <th>Sent By</th>
+                                            <th>Recipients</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbl-broadcasts">
+                                        <tr><td colspan="4" class="placeholder-text">Loading broadcast history...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 4: Knowledge Base -->
+                <section id="panel-knowledge" class="tab-panel">
+                    <!-- Structured Q&As -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3>Structured Q&A Database</h3>
+                        </div>
+                        <div class="card-body" style="padding-bottom:0;">
+                            <form id="knowledge-manual-form" class="glass-card" style="padding: 15px; margin-bottom: 20px; border-color: var(--border-color-blue);">
+                                <h4 style="margin-bottom: 12px; font-size:13px; font-weight:700; color:var(--primary);"><i class="fa-solid fa-pen-to-square"></i> Add/Edit Knowledge Entry</h4>
+                                <input type="hidden" id="kb-manual-id">
+                                <div class="input-group">
+                                    <label for="kb-manual-topic">Question / Topic</label>
+                                    <input type="text" id="kb-manual-topic" placeholder="e.g. Standard package cost" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="kb-manual-content">Answer / Details</label>
+                                    <textarea id="kb-manual-content" rows="4" placeholder="Enter standard answering instructions..." required></textarea>
+                                </div>
+                                <button type="submit" id="btn-kb-manual-submit" class="btn btn-primary btn-sm btn-block">
+                                    <i class="fa-solid fa-floppy-disk"></i> Save Entry
+                                </button>
+                            </form>
+                        </div>
+                        <div class="table-container" style="max-height: 450px; overflow-y: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Topic</th>
+                                        <th>Content Preview</th>
+                                        <th>Source</th>
+                                        <th style="width: 100px; text-align: right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbl-knowledge">
+                                    <tr><td colspan="4" class="placeholder-text">Loading Q&A items...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 5: Packages -->
+                <section id="panel-packages" class="tab-panel">
+                    <div class="card-header-actions">
+                        <h3>Packages</h3>
+                        <button id="btn-add-package" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add Package</button>
+                    </div>
+                    <div class="cards-grid" id="packages-cards-container">
+                        <!-- Dynamic packages as cards -->
+                    </div>
+                </section>
+
+                <!-- Panel 6: Add-On Fees -->
+                <section id="panel-fees" class="tab-panel">
+                    <div class="card-header-actions">
+                        <h3>Add-On Fees & Checkout Charges</h3>
+                        <button id="btn-add-fee" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add Fee</button>
+                    </div>
+                    <div class="cards-grid" id="fees-cards-container">
+                        <!-- Dynamic add-on fees as cards -->
+                    </div>
+                </section>
+
+                <!-- Panel 7: Branches -->
+                <section id="panel-branches" class="tab-panel">
+                    <div class="card-header-actions">
+                        <h3>Office Branches</h3>
+                        <button id="btn-add-branch" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add Branch</button>
+                    </div>
+                    <div class="cards-grid" id="branches-cards-container">
+                        <!-- Dynamic branches as cards -->
+                    </div>
+                </section>
+
+                <!-- Panel 14: School Resources (Consolidated View for Branch Admin) -->
+                <section id="panel-resources" class="tab-panel">
+                    <div class="glass-card" style="padding: 20px; margin-bottom: 5px;">
+                        <div class="resources-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                            <div class="resources-tabs" style="display: flex; gap: 10px;">
+                                <button class="btn btn-primary resources-sub-tab active" data-subtab="kb"><i class="fa-solid fa-book-open"></i> Knowledge Base</button>
+                                <button class="btn btn-secondary resources-sub-tab" data-subtab="branches"><i class="fa-solid fa-building"></i> Office Branches</button>
+                                <button class="btn btn-secondary resources-sub-tab" data-subtab="packages"><i class="fa-solid fa-box"></i> Packages</button>
+                                <button class="btn btn-secondary resources-sub-tab" data-subtab="fees"><i class="fa-solid fa-hand-holding-dollar"></i> Add-On Fees</button>
+                            </div>
+                            <div class="resources-search-wrapper" style="position: relative; min-width: 280px; margin-left: auto;">
+                                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none;"></i>
+                                <input type="text" id="resources-search" placeholder="Search reference data..." style="padding-left: 35px; width: 100%; border: 1px solid var(--border-color); border-radius: 6px; height: 38px; background: rgba(255, 255, 255, 0.05); color: var(--text-color);">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sub-panel 1: Knowledge Base -->
+                    <div id="sub-panel-kb" class="resources-sub-panel">
+                        <div class="glass-card">
+                            <div class="card-header">
+                                <h3>Structured Q&A Directory</h3>
+                            </div>
+                            <div class="table-container" style="max-height: 550px; overflow-y: auto;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Topic</th>
+                                            <th>Content Answering Instructions</th>
+                                            <th style="width: 150px;">Source</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbl-resources-knowledge">
+                                        <tr><td colspan="3" class="placeholder-text">Loading Q&A items...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sub-panel 2: Office Branches -->
+                    <div id="sub-panel-branches" class="resources-sub-panel hide">
+                        <div class="cards-grid" id="resources-branches-grid">
+                            <!-- Dynamic branches cards -->
+                        </div>
+                    </div>
+
+                    <!-- Sub-panel 3: Packages -->
+                    <div id="sub-panel-packages" class="resources-sub-panel hide">
+                        <div class="cards-grid" id="resources-packages-grid">
+                            <!-- Dynamic packages cards -->
+                        </div>
+                    </div>
+
+                    <!-- Sub-panel 4: Add-On Fees -->
+                    <div id="sub-panel-fees" class="resources-sub-panel hide">
+                        <div class="cards-grid" id="resources-fees-grid">
+                            <!-- Dynamic fees cards -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 8: Clients -->
+                <section id="panel-clients" class="tab-panel">
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3>Registered Clients</h3>
+                            <div style="display:flex;gap:10px;align-items:center;">
+                                <select id="filter-client-location" class="btn btn-secondary btn-sm" style="min-width:120px;">
+                                    <option value="">All Branches</option>
+                                </select>
+                                <input type="text" id="filter-client-search" placeholder="Search name or phone..." class="btn btn-secondary btn-sm" style="min-width:180px;">
+                                <button id="btn-send-clients-msg" class="btn btn-primary btn-sm" disabled>Send Message</button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="check-all-clients" title="Select All"></th>
+                                        <th>Name</th>
+                                        <th>Phone</th>
+                                        <th>Town</th>
+                                        <th>Closest Branch</th>
+                                        <th>Bookings</th>
+                                        <th>Events</th>
+                                        <th>Last Booking</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbl-registered-clients">
+                                    <tr><td colspan="8" class="placeholder-text">Loading registered clients...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 9: Registrations -->
+                <section id="panel-registrations" class="tab-panel">
+                    <!-- Registration Analytics Collapsible -->
+                    <details class="glass-card" style="margin-bottom: 20px; padding: 15px; border: 1px solid var(--border-color); border-radius: 10px;">
+                        <summary style="cursor: pointer; font-weight: 700; color: var(--primary); outline: none;">
+                            <i class="fa-solid fa-chart-line"></i> View Registration Analytics
+                        </summary>
+                        <div class="card-body" style="margin-top: 15px;">
+                            <form id="reg-analytics-form-page" style="display:flex; gap:15px; align-items:flex-end; margin-bottom: 20px; flex-wrap:wrap;">
+                                <div class="input-group" style="flex:1; min-width:150px; margin-bottom:0;">
+                                    <label>Start Date</label>
+                                    <input type="date" id="reg-filter-start-page" required>
+                                </div>
+                                <div class="input-group" style="flex:1; min-width:150px; margin-bottom:0;">
+                                    <label>End Date</label>
+                                    <input type="date" id="reg-filter-end-page" required>
+                                </div>
+                                <div class="input-group" style="flex:1; min-width:150px; margin-bottom:0;">
+                                    <label>Status</label>
+                                    <select id="reg-filter-status-page">
+                                        <option value="all">All Registrations</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="approved">Approved</option>
+                                        <option value="rejected">Rejected</option>
+                                    </select>
+                                </div>
+                                <button type="submit" id="btn-reg-filter-page" class="btn btn-primary" style="height:40px;"><i class="fa-solid fa-filter"></i> Apply Filter</button>
+                            </form>
+                            
+                            <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 20px;">
+                                <div class="glass-card stat-card" style="padding:15px;">
+                                    <div class="stat-info">
+                                        <h3 style="font-size: 13px; color:var(--text-muted);">Filtered Registrations</h3>
+                                        <p class="stat-value" id="reg-filter-total-page">0</p>
+                                    </div>
+                                </div>
+                                <div class="glass-card stat-card" style="padding:15px;">
+                                    <div class="stat-info">
+                                        <h3 style="font-size: 13px; color:var(--text-muted);">Pending in Range</h3>
+                                        <p class="stat-value" id="reg-filter-pending-page">0</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="height: 280px; width:100%;">
+                                <canvas id="reg-analytics-chart-page"></canvas>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Submitted Intake Registrations -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3>Submitted Intake Registrations</h3>
+                            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                                <select id="filter-booking-location" class="btn btn-secondary btn-sm" style="min-width:120px;">
+                                    <option value="">All Branches</option>
+                                </select>
+                                <select id="filter-booking-status" class="btn btn-secondary btn-sm" style="min-width:110px;">
+                                    <option value="">All Status</option>
+                                    <option value="confirmed">Paid / Confirmed</option>
+                                    <option value="pending">Not Paid / Pending</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                                <select id="filter-booking-package" class="btn btn-secondary btn-sm" style="min-width:140px;">
+                                    <option value="">All Packages</option>
+                                </select>
+                                <div style="display:flex;align-items:center;gap:4px;">
+                                    <span style="font-size:11px;color:var(--text-muted);">From:</span>
+                                    <input type="date" id="filter-booking-start-date" class="btn btn-secondary btn-sm" style="min-width:130px;padding:4px 8px;">
+                                </div>
+                                <div style="display:flex;align-items:center;gap:4px;">
+                                    <span style="font-size:11px;color:var(--text-muted);">To:</span>
+                                    <input type="date" id="filter-booking-end-date" class="btn btn-secondary btn-sm" style="min-width:130px;padding:4px 8px;">
+                                </div>
+                                <input type="text" id="filter-booking-search" placeholder="Search..." class="btn btn-secondary btn-sm" style="min-width:150px;">
+                                <button id="btn-send-bookings-msg" class="btn btn-primary btn-sm" disabled>Send Message</button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="check-all-bookings" title="Select All"></th>
+                                        <th>User Name</th>
+                                        <th>Phone Number</th>
+                                        <th>Selected Program / Package</th>
+                                        <th>Fee (GHS)</th>
+                                        <th>Status</th>
+                                        <th>Submitted Date</th>
+                                        <th>Branch</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbl-bookings">
+                                    <tr><td colspan="9" class="placeholder-text">Loading registrations...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 13: Support Tickets -->
+                <section id="panel-tickets" class="tab-panel">
+                    <!-- Support Tickets -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3>Support & Feedback Tickets</h3>
+                            <div style="display:flex;gap:10px;align-items:center;">
+                                <select id="filter-ticket-location" class="btn btn-secondary btn-sm" style="min-width:120px;">
+                                    <option value="">All Branches</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>User Info</th>
+                                        <th>Branch</th>
+                                        <th>Subject</th>
+                                        <th>Description / Details</th>
+                                        <th>Status</th>
+                                        <th>Submitted Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbl-tickets">
+                                    <tr><td colspan="7" class="placeholder-text">Loading tickets...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 10: Chat Analysis (Lead CRM) -->
+                <section id="panel-chat-analysis" class="tab-panel">
+                    <div class="layout-split">
+                        <!-- Leads Sidebar -->
+                        <div class="sidebar glass-card" style="flex: 0 0 350px;">
+                            <div class="card-header" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                                <h3>Lead Manager</h3>
+                                <select id="filter-lead-status" class="btn btn-secondary btn-sm" style="width: 100%;">
+                                    <option value="all">All Users</option>
+                                    <option value="hot">🔥 Hot Leads</option>
+                                    <option value="warm">🟡 Warm Leads</option>
+                                    <option value="cold">🧊 Cold Leads</option>
+                                    <option value="unassigned">Unassigned</option>
+                                </select>
+                            </div>
+                            <div class="thread-list" id="crm-leads-list">
+                                <div class="placeholder-text">Loading leads...</div>
+                            </div>
+                        </div>
+
+                        <!-- CRM Main Area -->
+                        <div class="main-content glass-card" style="display: flex; flex-direction: column;">
+                            <div class="card-header" id="crm-main-header" style="display: none; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; flex-direction: column; gap: 4px;">
+                                    <h3 id="crm-user-name" style="margin:0;">Select a lead</h3>
+                                    <span id="crm-user-phone" style="font-size: 12px; color: var(--text-muted);"></span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <select id="crm-override-status" class="btn btn-secondary btn-sm">
+                                        <option value="unassigned">Unassigned</option>
+                                        <option value="hot">🔥 Hot Lead</option>
+                                        <option value="warm">🟡 Warm Lead</option>
+                                        <option value="cold">🧊 Cold Lead</option>
+                                    </select>
+                                    <button id="btn-crm-analyze" class="btn btn-primary btn-sm"><i class="fa-solid fa-robot"></i> Analyze Chat</button>
+                                </div>
+                            </div>
+
+                            <div class="card-body" id="crm-main-body" style="display: none; flex-direction: column; overflow: hidden; padding: 0;">
+                                <!-- AI Analysis Output -->
+                                <div id="crm-ai-output" style="padding: 20px; background: rgba(0,0,0,0.02); border-bottom: 1px solid var(--border-color); display: none;">
+                                    <h4 style="margin-top:0; color: var(--primary);">AI Analysis Summary</h4>
+                                    <p id="crm-ai-summary" style="margin-bottom: 15px; font-size: 14px; color: var(--text-color);"></p>
+                                    <h4 style="margin-top:0; color: var(--primary);">Next Steps</h4>
+                                    <div id="crm-ai-next-steps" style="font-size: 14px; color: var(--text-color);"></div>
+                                </div>
+                                
+                                <!-- Chat History -->
+                                <div class="chat-history" id="crm-chat-history" style="flex: 1; padding: 20px;">
+                                    <div class="placeholder-text">Chat history will appear here...</div>
+                                </div>
+                                
+                                <!-- Action Area -->
+                                <div class="chat-input-area" style="padding: 15px 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: center; background: #fff;">
+                                    <button id="btn-crm-go-live" class="btn btn-primary" style="width: 100%;">
+                                        <i class="fa-solid fa-comments"></i> Chat with this Lead in Live Chats
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="card-body placeholder-text" id="crm-placeholder" style="flex: 1; display: flex; align-items: center; justify-content: center;">
+                                Select a lead from the sidebar to view CRM details.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Panel 11: Manage Admins -->
+                <section id="panel-admins" class="tab-panel">
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3>Administrative Users</h3>
+                            <button id="btn-add-admin" class="btn btn-primary btn-sm"><i class="fa-solid fa-user-plus"></i> Add Admin</button>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Role</th>
+                                        <th>Assigned Branch</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbl-admins">
+                                    <tr><td colspan="4" class="placeholder-text">Loading admin users...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Universal Dialog Modals (CRUD triggers) -->
+    <!-- Package Modal -->
+    <div id="modal-package" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-btn" data-modal="modal-package">&times;</span>
+            <h3 id="package-modal-title">Add Package</h3>
+            <form id="package-form">
+                <input type="hidden" id="package-id">
+                <div class="input-group">
+                    <label for="package-category">Category</label>
+                    <select id="package-category" required>
+                        <option value="Non-Students">Non-Students</option>
+                        <option value="Students / NSS">Students / NSS</option>
+                        <option value="License Only">License Only</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="package-name">Package Name</label>
+                    <input type="text" id="package-name" required>
+                </div>
+                <div class="input-group">
+                    <label for="package-desc">Description</label>
+                    <textarea id="package-desc" rows="3" required></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="package-schedule-type">Schedule Type</label>
+                    <select id="package-schedule-type" required>
+                        <option value="Weekdays">Weekdays</option>
+                        <option value="Weekends">Weekends</option>
+                        <option value="Weekends or Weekdays">Weekends or Weekdays</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="package-duration-weeks">Duration Range (Weeks)</label>
+                    <input type="text" id="package-duration-weeks" required placeholder="e.g. 6">
+                </div>
+                <div class="input-group">
+                    <label for="package-price">Price (GHS)</label>
+                    <input type="number" id="package-price" step="0.01" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save Package</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Client Modal (Internal Branches Form) -->
+    <div id="modal-client" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-btn" data-modal="modal-client">&times;</span>
+            <h3 id="client-modal-title">Add Branch</h3>
+            <form id="client-form">
+                <input type="hidden" id="client-id">
+                <div class="input-group">
+                    <label for="client-name">Branch Name</label>
+                    <input type="text" id="client-name" required placeholder="e.g. Central Branch">
+                </div>
+                <div class="input-group">
+                    <label for="client-region">Region</label>
+                    <input type="text" id="client-region" required placeholder="e.g. Region A">
+                </div>
+                <div class="input-group">
+                    <label for="client-address">Address</label>
+                    <input type="text" id="client-address">
+                </div>
+                <div class="input-group">
+                    <label for="client-contact-numbers">Contact Number(s)</label>
+                    <input type="text" id="client-contact-numbers">
+                </div>
+                <div class="input-group">
+                    <label for="client-maps-link">Google Maps URL</label>
+                    <input type="url" id="client-maps-link" placeholder="https://maps.google.com/...">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save Branch</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Fee Modal -->
+    <div id="modal-fee" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-btn" data-modal="modal-fee">&times;</span>
+            <h3 id="fee-modal-title">Add Checkout Fee</h3>
+            <form id="fee-form">
+                <input type="hidden" id="fee-id">
+                <div class="input-group">
+                    <label for="fee-name">Fee Name</label>
+                    <input type="text" id="fee-name" required placeholder="e.g. Registration Fee">
+                </div>
+                <div class="input-group">
+                    <label for="fee-desc">Description</label>
+                    <textarea id="fee-desc" rows="3" placeholder="Brief description of what this fee is for..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="fee-amount">Amount (GHS)</label>
+                    <input type="number" id="fee-amount" step="0.01" required placeholder="0.00">
+                </div>
+                <div class="input-group" style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                    <input type="checkbox" id="fee-mandatory" style="width: auto;">
+                    <label for="fee-mandatory" style="margin: 0; font-weight: normal;">Mandatory checkout fee</label>
+                </div>
+                <div class="input-group" style="display: flex; align-items: center; gap: 8px; margin-top: 10px; margin-bottom: 15px;">
+                    <input type="checkbox" id="fee-pass-through" style="width: auto;">
+                    <label for="fee-pass-through" style="margin: 0; font-weight: normal;">Pass-through fee (paid to third-party)</label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save Fee</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Account Modal -->
+    <div id="modal-admin" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-btn" data-modal="modal-admin">&times;</span>
+            <h3 id="admin-modal-title">Add Admin Account</h3>
+            <form id="admin-form">
+                <input type="hidden" id="admin-id">
+                <div class="input-group">
+                    <label for="admin-user-username">Username</label>
+                    <input type="text" id="admin-user-username" required>
+                </div>
+                <div class="input-group" id="admin-password-group">
+                    <label for="admin-user-password">Password</label>
+                    <input type="password" id="admin-user-password" placeholder="Enter password (required for new user)">
+                </div>
+                <div class="input-group">
+                    <label for="admin-user-role">Role</label>
+                    <select id="admin-user-role" required>
+                        <option value="branch_admin">Branch Admin</option>
+                        <option value="super_admin">Super Admin</option>
+                    </select>
+                </div>
+                <div class="input-group" id="admin-location-group">
+                    <label for="admin-user-location">Assigned Location</label>
+                    <select id="admin-user-location">
+                        <option value="">None (Super Admin - All Locations)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save Admin</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- AI Chat Analysis Modal -->
+    <div id="modal-chat-analysis" class="modal">
+        <div class="modal-content glass-card analysis-modal-content">
+            <span class="close-btn" data-modal="modal-chat-analysis">&times;</span>
+            <div class="analysis-modal-header">
+                <i class="fa-solid fa-wand-magic-sparkles" style="font-size:22px; color:var(--primary);"></i>
+                <h3>AI Chat Analysis</h3>
+            </div>
+            <div id="chat-analysis-loading" class="placeholder-text padding-15">
+                <i class="fa-solid fa-spinner fa-spin"></i> Analyzing chat logs via Gemini...
+            </div>
+            <div id="chat-analysis-content" class="hide" style="line-height:1.7; font-size:14px; color:var(--text-primary); padding:8px 0;">
+                <!-- Analysis Output -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Send Message Modal -->
+    <div id="modal-send-message" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-btn" data-modal="modal-send-message">&times;</span>
+            <h3>Send WhatsApp Message</h3>
+            <form id="send-message-form">
+                <input type="hidden" id="send-msg-ids">
+                <input type="hidden" id="send-msg-mode">
+                <div class="input-group">
+                    <label id="send-msg-recipients-label">Recipients: 0 selected</label>
+                </div>
+                <div class="input-group">
+                    <label for="send-msg-text">Message</label>
+                    <textarea id="send-msg-text" rows="5" placeholder="Type your message here..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Send via WhatsApp</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Registration Booking Modal -->
+    <div id="modal-booking" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-btn" data-modal="modal-booking">&times;</span>
+            <h3>Edit Registration Booking</h3>
+            <form id="booking-edit-form">
+                <input type="hidden" id="booking-edit-id">
+                <div class="input-group">
+                    <label for="booking-edit-package">Selected Package</label>
+                    <select id="booking-edit-package" required></select>
+                </div>
+                <div class="input-group">
+                    <label for="booking-edit-status">Status</label>
+                    <select id="booking-edit-status" required>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="booking-edit-name">Full Name</label>
+                    <input type="text" id="booking-edit-name">
+                </div>
+                <div class="input-group">
+                    <label for="booking-edit-dob">Date of Birth</label>
+                    <input type="text" id="booking-edit-dob" placeholder="e.g. DD/MM/YYYY">
+                </div>
+                <div class="input-group">
+                    <label for="booking-edit-ghanacard">Ghana Card Number</label>
+                    <input type="text" id="booking-edit-ghanacard">
+                </div>
+                <div class="input-group">
+                    <label for="booking-edit-birthplace">Place of Birth</label>
+                    <input type="text" id="booking-edit-birthplace">
+                </div>
+                <div class="input-group">
+                    <label for="booking-edit-witnessname">Witness Name</label>
+                    <input type="text" id="booking-edit-witnessname">
+                </div>
+                <div class="input-group">
+                    <label for="booking-edit-witnessphone">Witness Phone</label>
+                    <input type="text" id="booking-edit-witnessphone">
+                </div>
+                <div class="input-group">
+                    <label for="booking-edit-marital">Marital Status</label>
+                    <input type="text" id="booking-edit-marital">
+                </div>
+                <div class="input-group">
+                    <label for="booking-edit-location">Training Location</label>
+                    <input type="text" id="booking-edit-location">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Ticket Modal -->
+    <div id="modal-ticket" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-btn" data-modal="modal-ticket">&times;</span>
+            <h3>Edit Support Ticket</h3>
+            <form id="ticket-edit-form">
+                <input type="hidden" id="ticket-edit-id">
+                <div class="input-group">
+                    <label for="ticket-edit-subject">Subject</label>
+                    <input type="text" id="ticket-edit-subject" required>
+                </div>
+                <div class="input-group">
+                    <label for="ticket-edit-desc">Description</label>
+                    <textarea id="ticket-edit-desc" rows="3"></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="ticket-edit-location">Branch Location</label>
+                    <select id="ticket-edit-location" required>
+                        <option value="">-- Select Branch --</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="ticket-edit-status">Status</label>
+                    <select id="ticket-edit-status" required>
+                        <option value="open">Open</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="app.js?v=6"></script>
+</body>
+</html>
