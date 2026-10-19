@@ -1,4 +1,4 @@
-# WhatsApp — CRM & AI Automation Platform
+# Customer Relations WhatsApp Bot
 
 A self-hosted, multi-branch **WhatsApp Business CRM** with an AI assistant, payments, support
 ticketing, and a role-based admin dashboard. Built on the official **Meta WhatsApp Cloud API**.
@@ -63,8 +63,8 @@ ticketing, and a role-based admin dashboard. Built on the official **Meta WhatsA
 ### 2. Install
 
 ```bash
-git clone https://github.com/HaroldDagadu/whatsapp.git
-cd whatsapp
+git clone https://github.com/HaroldDagadu/customer-relations-whatsapp-bot.git
+cd customer-relations-whatsapp-bot
 python -m venv venv
 # Windows:
 venv\Scripts\activate
